@@ -1,0 +1,9 @@
+{
+  "name": "Easy Cash Flow",
+  "app_id": "25a5ac9a",
+  "defaultBrowser": "Chrome",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}

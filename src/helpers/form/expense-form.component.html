@@ -1,0 +1,111 @@
+<ion-grid>
+  <form *ngIf="!isDeleted" [formGroup]="expenseForm" (ngSubmit)="submit()">
+    <ion-row>
+      <ion-col col-12>
+        <ion-item>
+          <ion-label>Title</ion-label>
+          <ion-input formControlName="title" type="text"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+
+      <ion-col col-12>
+        <ion-item>
+          <ion-label>Amount</ion-label>
+          <ion-input formControlName="amount" type="number" step="any"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col col-12>
+        <ion-item>
+          <ion-label>Repeating</ion-label>
+          <ion-checkbox [disabled]="isRepeatable()" formControlName="composed" (ionChange)="toggleComposedProperties($event.checked)"></ion-checkbox>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row [hidden]="!isComposed">
+      <ion-col col-6>
+        <ion-item>
+          <ion-label>Forever</ion-label>
+          <ion-checkbox [disabled]="isRepeatable()" (ionChange)="toggleForever($event.checked)" formControlName="forever"></ion-checkbox>
+        </ion-item>
+      </ion-col>
+
+      <ion-col col-6>
+        <ion-item>
+          <ion-label>times</ion-label>
+          <ion-input [disabled]="isForever || isRepeatable()" formControlName="repeat" min="1" max="72" type="number" #repeat (keyup)="verifyLimit(repeat)"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!--<ion-row>
+      <ion-list *ngIf="formType == 'edit'" radio-group formControlName="editType">
+        <ion-item>
+          <ion-label>Edit all</ion-label>
+          <ion-radio value="all"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Edit this</ion-label>
+          <ion-radio value="current"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Edit foward</ion-label>
+          <ion-radio value="foward"></ion-radio>
+        </ion-item>
+      </ion-list>
+    </ion-row>-->
+    
+    <ion-row>
+      <p *ngIf="title.touched && title.invalid">
+        Title is required.
+      </p>
+
+      <p color="danger" *ngIf="amount.touched && amount.invalid">
+        Amount is required and must be numeric.
+      </p>
+
+      <button 
+        *ngIf="!displayEditAndDeleteButtons"
+        [disabled]="(title.invalid || amount.invalid)" 
+        (click)="setOperationType('add')" 
+        ion-button block 
+        type="submit" 
+        color="secondary">
+        ADD 
+      </button>
+      
+      <button 
+        *ngIf="displayEditAndDeleteButtons"
+        [disabled]="(title.invalid || amount.invalid)"
+        (click)="setOperationType('edit')" 
+        ion-button
+        block
+        type="submit" 
+        color="secondary">
+        EDIT 
+      </button>
+
+      <button 
+        *ngIf="displayEditAndDeleteButtons" 
+        [disabled]="(title.invalid || amount.invalid)"
+        (click)="setOperationType('delete')" 
+        ion-button 
+        block 
+        type="submit" 
+        color="danger">
+        DELETE
+       </button>
+    </ion-row>
+  </form>
+</ion-grid>
+
+<!--<ion-list *ngIf="isDeleted">  
+    <button ion-button (click)="delete('all')">Delete all</button>
+    <button ion-button (click)="delete('current')">Delete this expense</button>
+    <button ion-button (click)="delete('foward')">Delete from this to the last</button>
+</ion-list>-->

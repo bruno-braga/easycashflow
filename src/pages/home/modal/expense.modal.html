@@ -1,0 +1,12 @@
+<ion-header>
+	<ion-navbar>
+		<button ion-button (click)="closeModal()" clear color="dark">back</button>
+	</ion-navbar>
+</ion-header>
+
+<ion-content padding>
+	<ib-expense-form 
+		[currentDate]="params.currentDate" 
+		[expense]="params.expense">
+	</ib-expense-form>
+</ion-content>

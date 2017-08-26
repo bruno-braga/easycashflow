@@ -1,0 +1,14 @@
+.space-btw {
+	display: flex;
+	justify-content: space-between;
+}
+
+.centralize {
+	display: flex;
+	justify-content: center;
+}
+
+#month {
+	margin-top: 0 !important;
+	transform: translate(0, 35%)
+}

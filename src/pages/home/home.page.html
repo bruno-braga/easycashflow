@@ -1,0 +1,50 @@
+<ion-content class="content-wp" padding>
+	<header>
+		<ion-row>
+			<ion-col col-md-1>
+				<button ion-button color="dark" (click)="navigateThroughMonths(-1)">
+					<ion-icon name="arrow-back"></ion-icon>
+				</button>
+			</ion-col>
+
+			<ion-col col-md-10>
+				<h2 text-center id="month">{{monthName}}</h2>
+			</ion-col>
+
+			<ion-col col-md-1>
+				<button ion-button color="dark" style="float: right;" (click)="navigateThroughMonths(1)">
+					<ion-icon name="arrow-forward"></ion-icon>
+				</button>
+			</ion-col>
+		</ion-row>
+	</header>
+
+	<section class="centralize">
+		<h2 *ngIf="expenses !== undefined">{{expenses | balanceExpenses}}</h2>
+	</section>
+
+	<ion-scroll scrollY="true" style="height:75%">
+		<div *ngIf="expenses?.length == 0">
+			<img src="./assets/noexpense.png" alt="No expense are registered">
+		</div>
+
+		<ion-list no-padding>
+			<ng-template id="" let-expense ngFor [ngForOf]="expenses">
+				<ion-item no-padding (click)="editExpense(expense)">
+					<ion-label padding-left="8px 0">
+						{{expense.title}}
+
+						<ng-template [ngIf]="expense.repeat > 1">
+							<ion-icon name="repeat"></ion-icon>
+							{{expense | showInstalmentMonth:expenseRange}}
+						</ng-template>
+					</ion-label>
+
+					<span item-right [style.color]="setColor(expense.amount)">{{expense.amount | stylizeAmountOfExpense}}</span>
+				</ion-item>
+			</ng-template>
+		</ion-list>
+	</ion-scroll>
+
+	<button ion-button block color="dark" (click)="addExpense()">ADD</button>
+</ion-content>
