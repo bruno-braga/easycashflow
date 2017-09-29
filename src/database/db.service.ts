@@ -41,6 +41,9 @@ export class DbService {
   }
   public insert(expense: any): Observable<any> {
     expense.repeat = parseInt(expense.repeat, 10);
+    if (expense.repeat === 0) {
+      expense.repeat = 1;
+    }
 
     if (expense.forever) {
       expense.repeat = Expense.MAX_EXPENSE_REPETITION;

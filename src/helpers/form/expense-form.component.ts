@@ -49,9 +49,7 @@ export class ExpenseFormComponent implements OnInit {
 
     if (this.expense !== null) {
       this.displayEditAndDeleteButtons = true;
-      // this.formType = 'edit';
       this.isComposed = this.expense.composed;
-      // this.expenseForm.addControl('editType', new FormControl('', Validators.required));
       this.populateForm();
     } else {
       this.displayEditAndDeleteButtons = false;
@@ -64,13 +62,9 @@ export class ExpenseFormComponent implements OnInit {
     this.editType = this.expenseForm.controls['editType'];
   }
 
-  public verifyLimit(repeat: any) {
-    if (repeat.value > Expense.MAX_EXPENSE_REPETITION) {
-      this.repeat.setValue(Expense.MAX_EXPENSE_REPETITION);
-    }
-
-    if (repeat.value < Expense.MIN_EXPENSE_REPETITION) {
-      this.repeat.setValue(1);
+  public verifyLimit() {
+    if (this.repeat.value < 0) {
+      this.repeat.setValue(0);
     }
   }
 
@@ -96,74 +90,74 @@ export class ExpenseFormComponent implements OnInit {
     if (this.expenseForm.valid) {
       switch (this.operationType) {
         case 'add':
-        this.expense = new Expense(
-          this.expenseForm.value['title'],
-          this.expenseForm.value['amount'],
-          this.expenseForm.value['instalmentDate'],
-          this.expenseForm.value['composed'],
-          this.expenseForm.value['monyBag'],
-          this.expenseForm.value['forever'],
-          this.expenseForm.value['repeat'],
-        );
+          this.expense = new Expense(
+            this.expenseForm.value['title'],
+            this.expenseForm.value['amount'],
+            this.expenseForm.value['instalmentDate'],
+            this.expenseForm.value['composed'],
+            this.expenseForm.value['monyBag'],
+            this.expenseForm.value['forever'],
+            this.expenseForm.value['repeat'],
+          );
 
-        this.dbService.insert(this.expense)
-          .subscribe((inserHasSucceded: boolean) => {
-            this.viewCtrl.dismiss(inserHasSucceded);
-          },
-        );
-        break;
+          this.dbService.insert(this.expense)
+            .subscribe((inserHasSucceded: boolean) => {
+              this.viewCtrl.dismiss(inserHasSucceded);
+            },
+          );
+          break;
         case 'edit':
-        this.alert = this.alertBuilder();
-        this.alert.addButton({
-          text: 'Ok',
-          handler: (occurrence: any) => {
-            let navTransition = this.alert.dismiss();
+          this.alert = this.alertBuilder();
+          this.alert.addButton({
+            text: 'Ok',
+            handler: (occurrence: any) => {
+              let navTransition = this.alert.dismiss();
 
-            let oldExpense = R.clone(this.expense);
+              let oldExpense = R.clone(this.expense);
 
-            this.expense.title = this.expenseForm.value['title'];
-            this.expense.amount = this.expenseForm.value['amount'];
-            this.expense.instalmentDate = this.expenseForm.value['instalmentDate'];
-            this.expense.composed = this.expenseForm.value['composed'];
-            this.expense.monyBag = this.expenseForm.value['monyBag'];
-            this.expense.forever = this.expenseForm.value['forever'];
-            this.expense.repeat = parseInt(this.expenseForm.value['repeat'], 10);
+              this.expense.title = this.expenseForm.value['title'];
+              this.expense.amount = this.expenseForm.value['amount'];
+              this.expense.instalmentDate = this.expenseForm.value['instalmentDate'];
+              this.expense.composed = this.expenseForm.value['composed'];
+              this.expense.monyBag = this.expenseForm.value['monyBag'];
+              this.expense.forever = this.expenseForm.value['forever'];
+              this.expense.repeat = parseInt(this.expenseForm.value['repeat'], 10);
 
-            this.dbService.update(occurrence, this.expense, oldExpense)
-              .subscribe((updatedHasSucceded: boolean) => {
-                console.log('updated ',   updatedHasSucceded);
-                navTransition.then(() => {
-                  this.nav.pop();
-                });
-              },
-            );
-            return false;
-          },
-        });
-        this.alert.present();
-        break;
+              this.dbService.update(occurrence, this.expense, oldExpense)
+                .subscribe((updatedHasSucceded: boolean) => {
+                  console.log('updated ', updatedHasSucceded);
+                  navTransition.then(() => {
+                    this.nav.pop();
+                  });
+                },
+              );
+              return false;
+            },
+          });
+          this.alert.present();
+          break;
         case 'delete':
-        this.alert = this.alertBuilder();
-        this.alert.addButton({
-          text: 'Ok',
-          handler: (occurrence: any) => {
-            let navTransition = this.alert.dismiss();
+          this.alert = this.alertBuilder();
+          this.alert.addButton({
+            text: 'Ok',
+            handler: (occurrence: any) => {
+              let navTransition = this.alert.dismiss();
 
-            this.dbService.delete(occurrence, this.expense)
-              .subscribe((isDeleted: any) => {
-                console.log(isDeleted);
-                navTransition.then(() => {
-                  this.nav.pop();
-                });
-              },
-            );
-            return false;
-          },
-        });
-        this.alert.present();
-        break;
+              this.dbService.delete(occurrence, this.expense)
+                .subscribe((isDeleted: any) => {
+                  console.log(isDeleted);
+                  navTransition.then(() => {
+                    this.nav.pop();
+                  });
+                },
+              );
+              return false;
+            },
+          });
+          this.alert.present();
+          break;
         default:
-        break;
+          break;
       }
     }
   }

@@ -32,7 +32,10 @@ export class ExpenseForm {
         composed: [false],
         monyBag: [false],
         forever: [false],
-        repeat: [1],
+        repeat: [0, Validators.compose([
+          Validators.required,
+          NumberValidator.isValidNumber,
+        ])],
         instalmentDate: [],
       });
   }
