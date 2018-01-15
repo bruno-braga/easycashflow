@@ -37,6 +37,11 @@ export class HomePage implements OnInit {
     this.expenseRange = 0;
   }
 
+  swipeEvent(direction: any) {
+    let numberOfDays: number = (direction) === 2 ? 1 : -1;
+    this.navigateThroughMonths(numberOfDays);
+  }
+
   public setColor(amount: number): any {
     if (amount > 0) {
       return 'green';
