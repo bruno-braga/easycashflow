@@ -57,10 +57,10 @@ export class DbService {
       );
     }
 
+    let instalments = Expense.createInstalments(expense);
+
     return Observable.fromPromise(
-      this.db.bulkDocs(
-        Expense.createInstalments(Expense.toObject(expense)),
-      ),
+      this.db.bulkDocs(instalments),
     );
   }
 
