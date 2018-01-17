@@ -23,7 +23,7 @@
 		<h2 *ngIf="expenses !== undefined">{{expenses | balanceExpenses}}</h2>
 	</section>
 
-	<ion-scroll scrollY="true" style="height:75%">
+	<ion-scroll scrollY="true" style="height:75%" (swipe)="swipeEvent($event.direction)">
 		<div class="centralize" *ngIf="expenses?.length == 0">
 			<img src="./assets/noexpense.png" alt="No expense are registered">
 		</div>
