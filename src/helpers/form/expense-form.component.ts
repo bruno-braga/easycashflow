@@ -7,6 +7,8 @@ import { NumberValidator } from '../validator/number.validator';
 import { ViewController, AlertController, NavController } from 'ionic-angular';
 import { ExpenseForm } from './expense-form';
 
+import { OperationFactory } from '../factories/operation.factory';
+
 import R from 'ramda';
 
 @Component({
@@ -88,23 +90,16 @@ export class ExpenseFormComponent implements OnInit {
 
   public submit(): void {
     if (this.expenseForm.valid) {
+
       switch (this.operationType) {
         case 'add':
-          this.expense = new Expense(
-            this.expenseForm.value['title'],
-            this.expenseForm.value['amount'],
-            this.expenseForm.value['instalmentDate'],
-            this.expenseForm.value['composed'],
-            this.expenseForm.value['monyBag'],
-            this.expenseForm.value['forever'],
-            this.expenseForm.value['repeat'],
-          );
+          let context = OperationFactory.create(this.operationType);
 
-          this.dbService.insert(this.expense)
-            .subscribe((inserHasSucceded: boolean) => {
-              this.viewCtrl.dismiss(inserHasSucceded);
-            },
-          );
+          context.executeOperation(this.expenseForm.value)
+            .subscribe((hasSucceded: any) => {
+              this.viewCtrl.dismiss(hasSucceded);
+            });
+
           break;
         case 'edit':
           this.alert = this.alertBuilder();
