@@ -90,42 +90,29 @@ export class ExpenseFormComponent implements OnInit {
 
   public submit(): void {
     if (this.expenseForm.valid) {
-
       switch (this.operationType) {
         case 'add':
           let context = OperationFactory.create(this.operationType);
 
-          context.executeOperation(this.expenseForm.value)
+          context.executeOperation({}, this.expenseForm.value, {})
             .subscribe((hasSucceded: any) => {
               this.viewCtrl.dismiss(hasSucceded);
             });
-
           break;
         case 'edit':
+          let c = OperationFactory.create(this.operationType);
+
+
           this.alert = this.alertBuilder();
           this.alert.addButton({
             text: 'Ok',
             handler: (occurrence: any) => {
+
               let navTransition = this.alert.dismiss();
 
-              let oldExpense = R.clone(this.expense);
+              c.executeOperation(occurrence, this.expenseForm.value, this.expense)
+                .subscribe((operationHasSucceded: boolean) => navTransition.then(() => this.nav.pop()));
 
-              this.expense.title = this.expenseForm.value['title'];
-              this.expense.amount = this.expenseForm.value['amount'];
-              this.expense.instalmentDate = this.expenseForm.value['instalmentDate'];
-              this.expense.composed = this.expenseForm.value['composed'];
-              this.expense.monyBag = this.expenseForm.value['monyBag'];
-              this.expense.forever = this.expenseForm.value['forever'];
-              this.expense.repeat = parseInt(this.expenseForm.value['repeat'], 10);
-
-              this.dbService.update(occurrence, this.expense, oldExpense)
-                .subscribe((updatedHasSucceded: boolean) => {
-                  console.log('updated ', updatedHasSucceded);
-                  navTransition.then(() => {
-                    this.nav.pop();
-                  });
-                },
-              );
               return false;
             },
           });
