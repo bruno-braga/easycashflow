@@ -57,7 +57,7 @@ export class DbService {
       );
     }
 
-    let instalments = Expense.createInstalments(expense);
+    let instalments = Expense.createInstalments(Expense.toObject(expense));
 
     return Observable.fromPromise(
       this.db.bulkDocs(instalments),

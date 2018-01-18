@@ -73,17 +73,24 @@ export class Expense {
     return false;
   }
 
-  // tslint:disable-next-line:member-ordering
   public static toObject(expense: any): any {
-    let obj: any = Object.assign({}, expense);
-    let cpObj: any = {};
+    let expenseCopy: any = { ...expense };
+    let expenseToBeReturned: any = {};
 
-    // tslint:disable-next-line:forin
-    for (let key in obj) {
-      cpObj[key.substr(1, key.length)] = obj[key];
+    let beginWithUnderscore = (Object.keys(expenseCopy).shift().charAt(0) === '_');
+    if (beginWithUnderscore) {
+      for (let key in expenseCopy) {
+        expenseToBeReturned[key.substr(1, key.length)] = expenseCopy[key];
+      }
+
+      return expenseToBeReturned;
     }
 
-    return cpObj;
+    for (let key in expenseCopy) {
+      expenseToBeReturned[key] = expenseCopy[key];
+    }
+
+    return expenseToBeReturned;
   }
 
   private generateInstalmentId(): string {
