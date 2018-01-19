@@ -5,7 +5,7 @@ import { DateService } from '../../date/date.service';
 import { DbService } from '../../database/db.service';
 
 export class InsertStrategy implements OperationStrategy {
-  public executeOperation(expenseFormValues: any) {
+  public executeOperation(occurrence: any, expenseFormValues: any, oldExpense: any) {
     let expense = new Expense(
             expenseFormValues['title'],
             expenseFormValues['amount'],
