@@ -8,6 +8,7 @@ import { ViewController, AlertController, NavController } from 'ionic-angular';
 import { ExpenseForm } from './expense-form';
 
 import { OperationFactory } from '../factories/operation.factory';
+import { AlertBuilder } from '../incidenceController/alert.builder';
 
 import R from 'ramda';
 
@@ -37,6 +38,8 @@ export class ExpenseFormComponent implements OnInit {
   private zone: NgZone;
   private nav: NavController;
   private alert: any;
+  private operationFactory: OperationFactory;
+  private alertBuilder: AlertBuilder;
 
   constructor(private injector: Injector) {
     this.dbService = this.injector.get(DbService);
@@ -44,6 +47,8 @@ export class ExpenseFormComponent implements OnInit {
     this.zone = this.injector.get(NgZone);
     this.alertCtrl = this.injector.get(AlertController);
     this.nav = this.injector.get(NavController);
+    this.operationFactory = this.injector.get(OperationFactory);
+    this.alertBuilder = this.injector.get(AlertBuilder);
   }
 
   ngOnInit() {
@@ -90,49 +95,37 @@ export class ExpenseFormComponent implements OnInit {
 
   public submit(): void {
     if (this.expenseForm.valid) {
-
       switch (this.operationType) {
         case 'add':
-          let context = OperationFactory.create(this.operationType);
-
-          context.executeOperation(this.expenseForm.value)
+          this.operationFactory
+            .create(this.operationType)
+            .executeOperation({}, this.expenseForm.value, {})
             .subscribe((hasSucceded: any) => {
               this.viewCtrl.dismiss(hasSucceded);
             });
-
           break;
         case 'edit':
-          this.alert = this.alertBuilder();
+          let c = this.operationFactory.create(this.operationType);
+
+
+          // this.alert = this.alertBuilder();
+          this.alert = this.alertBuilder.createIncidenceAlert(this.isRepeatable());
           this.alert.addButton({
             text: 'Ok',
             handler: (occurrence: any) => {
+
               let navTransition = this.alert.dismiss();
 
-              let oldExpense = R.clone(this.expense);
+              c.executeOperation(occurrence, this.expenseForm.value, this.expense)
+                .subscribe((operationHasSucceded: boolean) => navTransition.then(() => this.nav.pop()));
 
-              this.expense.title = this.expenseForm.value['title'];
-              this.expense.amount = this.expenseForm.value['amount'];
-              this.expense.instalmentDate = this.expenseForm.value['instalmentDate'];
-              this.expense.composed = this.expenseForm.value['composed'];
-              this.expense.monyBag = this.expenseForm.value['monyBag'];
-              this.expense.forever = this.expenseForm.value['forever'];
-              this.expense.repeat = parseInt(this.expenseForm.value['repeat'], 10);
-
-              this.dbService.update(occurrence, this.expense, oldExpense)
-                .subscribe((updatedHasSucceded: boolean) => {
-                  console.log('updated ', updatedHasSucceded);
-                  navTransition.then(() => {
-                    this.nav.pop();
-                  });
-                },
-              );
               return false;
             },
           });
           this.alert.present();
           break;
         case 'delete':
-          this.alert = this.alertBuilder();
+          this.alert = this.alertBuilder.createIncidenceAlert(this.isRepeatable());
           this.alert.addButton({
             text: 'Ok',
             handler: (occurrence: any) => {
@@ -161,37 +154,7 @@ export class ExpenseFormComponent implements OnInit {
     this.isComposed = checked;
   }
 
-  private alertBuilder() {
-    let alert = this.alertCtrl.create();
-
-    alert.setTitle('Choose an option');
-    alert.addInput({
-      type: 'radio',
-      checked: true,
-      label: 'This',
-      value: 'current',
-    });
-
-    if (this.expense.repeat > 1) {
-      alert.addInput({
-        type: 'radio',
-        label: 'All',
-        value: 'all',
-      });
-
-      alert.addInput({
-        type: 'radio',
-        label: 'Foward',
-        value: 'foward',
-      });
-    }
-
-    alert.addButton('Cancel');
-    return alert;
-  }
-
   private populateForm(): void {
-    // tslint:disable-next-line:forin
     for (let key in this.expenseForm.controls) {
       this.expenseForm
         .controls[key]

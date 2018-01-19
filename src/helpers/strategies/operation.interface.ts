@@ -1,3 +1,3 @@
 export interface OperationStrategy {
-  executeOperation(expenseFormValues: any): any;
+  executeOperation(occurrence: any, expenseFormValues: any, oldExpense: any): any;
 }
