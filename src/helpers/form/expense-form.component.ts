@@ -105,10 +105,6 @@ export class ExpenseFormComponent implements OnInit {
             });
           break;
         case 'edit':
-          let c = this.operationFactory.create(this.operationType);
-
-
-          // this.alert = this.alertBuilder();
           this.alert = this.alertBuilder.createIncidenceAlert(this.isRepeatable());
           this.alert.addButton({
             text: 'Ok',
@@ -116,7 +112,9 @@ export class ExpenseFormComponent implements OnInit {
 
               let navTransition = this.alert.dismiss();
 
-              c.executeOperation(occurrence, this.expenseForm.value, this.expense)
+              this.operationFactory
+                .create(this.operationType)
+                .executeOperation(occurrence, this.expenseForm.value, this.expense)
                 .subscribe((operationHasSucceded: boolean) => navTransition.then(() => this.nav.pop()));
 
               return false;
