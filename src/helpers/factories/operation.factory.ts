@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
-import { InsertStrategy } from '../strategies/insert.strategy';
-import { EditStrategy } from '../strategies/edit.strategy';
 import { AlertController } from 'ionic-angular';
+import { StrategyService } from '../strategies/strategy.service';
 
 @Injectable()
 export class OperationFactory {
-  constructor(private alertCtrl: AlertController) {}
+  constructor(private alertCtrl: AlertController, private strategyService: StrategyService) {}
 
   public create(operation: string) {
     switch(operation) {
       case 'add':
-        return new InsertStrategy();
+        return this.strategyService.getInsert();
       case 'edit':
-        return new EditStrategy();
+        return this.strategyService.getEdit();
     }
   }
 }
