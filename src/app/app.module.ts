@@ -13,6 +13,13 @@ import { DateModule } from '../date/date.module';
 import { BalanceExpenses } from '../helpers/pipes/balance-expenses.pipe';
 import { StylizeAmountOfExpense } from '../helpers/pipes/stylize-expense.pipe';
 import { ShowInstalmentMonth } from '../helpers/pipes/show-instalment-month.pipe';
+import { OperationFactory } from '../helpers/factories/operation.factory';
+import { IncidenceController } from '../helpers/incidenceController/incidence.controller';
+import { AlertBuilder } from '../helpers/incidenceController/alert.builder';
+
+import { EditStrategy } from '../helpers/strategies/edit.strategy';
+import { InsertStrategy } from '../helpers/strategies/insert.strategy';
+import { DeleteStrategy } from '../helpers/strategies/delete.strategy';
 
 @NgModule({
     declarations: [
@@ -39,6 +46,12 @@ import { ShowInstalmentMonth } from '../helpers/pipes/show-instalment-month.pipe
     ],
     providers: [
       SplashScreen,
+      OperationFactory,
+      IncidenceController,
+      AlertBuilder,
+      EditStrategy,
+      InsertStrategy,
+      DeleteStrategy,
     ],
 })
 

@@ -1,3 +1,6 @@
+import { EventEmitter } from '@angular/core';
+
 export interface OperationStrategy {
-  executeOperation(expenseFormValues: any): any;
+  hasSuccededEmitter: EventEmitter<any>;
+  executeOperation(expenseFormValues: any, oldExpense: any): any;
 }
