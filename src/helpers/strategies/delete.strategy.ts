@@ -1,35 +1,28 @@
-import { OperationStrategy } from './operation.interface';
-import { ReflectiveInjector, Injectable, EventEmitter, NgZone } from '@angular/core';
-import { DateService } from '../../date/date.service';
+import { Injectable, EventEmitter } from '@angular/core';
+
 import { DbService } from '../../database/db.service';
-import { Expense } from '../../database/models/Expense';
 import { AlertBuilder } from '../incidenceController/alert.builder';
+import { OperationStrategy } from '../strategies/operation.interface';
 
 @Injectable()
-export class EditStrategy implements OperationStrategy {
+export class DeleteStrategy implements OperationStrategy {
   public hasSuccededEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(
-    private alertBuilder: AlertBuilder,
-    private dbService: DbService) {}
-
+    private dbService: DbService, 
+    private alertBuilder: AlertBuilder) {}
 
   public executeOperation(expenseFormValues: any, oldExpense: any) {
-    let oldExpenseCopy = { ...oldExpense };
     let isRepeatable = oldExpense.repeat > 1;
-
-    for (let key in expenseFormValues) {
-      oldExpense[key] = expenseFormValues[key];
-    }
-    
     let alert  = this.alertBuilder.createIncidenceAlert(isRepeatable);
+
     alert.addButton({
       text: 'ok',
       handler: (incidence: string) => {
         console.log(incidence);
 
         this.dbService
-          .update(incidence, oldExpense, oldExpenseCopy)
+          .delete(incidence, oldExpense)
           .subscribe(() => {
             this.hasSuccededEmitter.emit(true);
           });

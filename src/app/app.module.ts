@@ -17,6 +17,10 @@ import { OperationFactory } from '../helpers/factories/operation.factory';
 import { IncidenceController } from '../helpers/incidenceController/incidence.controller';
 import { AlertBuilder } from '../helpers/incidenceController/alert.builder';
 
+import { EditStrategy } from '../helpers/strategies/edit.strategy';
+import { InsertStrategy } from '../helpers/strategies/insert.strategy';
+import { DeleteStrategy } from '../helpers/strategies/delete.strategy';
+
 @NgModule({
     declarations: [
       MyApp,
@@ -45,6 +49,9 @@ import { AlertBuilder } from '../helpers/incidenceController/alert.builder';
       OperationFactory,
       IncidenceController,
       AlertBuilder,
+      EditStrategy,
+      InsertStrategy,
+      DeleteStrategy,
     ],
 })
 
