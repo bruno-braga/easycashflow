@@ -4,13 +4,11 @@ import { AbstractControl, FormGroup, Validators, FormControl } from '@angular/fo
 import { DbService } from '../../database/db.service';
 import { Expense } from '../../database/models/Expense';
 import { NumberValidator } from '../validator/number.validator';
-import { ViewController, AlertController, NavController } from 'ionic-angular';
+import { App, ViewController, AlertController, NavController } from 'ionic-angular';
 import { ExpenseForm } from './expense-form';
 
 import { OperationFactory } from '../factories/operation.factory';
 import { AlertBuilder } from '../incidenceController/alert.builder';
-
-import R from 'ramda';
 
 @Component({
   selector: 'ib-expense-form',
@@ -40,6 +38,7 @@ export class ExpenseFormComponent implements OnInit {
   private alert: any;
   private operationFactory: OperationFactory;
   private alertBuilder: AlertBuilder;
+  private app: App;
 
   constructor(private injector: Injector) {
     this.dbService = this.injector.get(DbService);
@@ -49,6 +48,7 @@ export class ExpenseFormComponent implements OnInit {
     this.nav = this.injector.get(NavController);
     this.operationFactory = this.injector.get(OperationFactory);
     this.alertBuilder = this.injector.get(AlertBuilder);
+    this.app = this.injector.get(App);
   }
 
   ngOnInit() {
@@ -95,58 +95,12 @@ export class ExpenseFormComponent implements OnInit {
 
   public submit(): void {
     if (this.expenseForm.valid) {
-      switch (this.operationType) {
-        case 'add':
-          this.operationFactory
-            .create(this.operationType)
-            .executeOperation({}, this.expenseForm.value, {})
-            .subscribe((hasSucceded: any) => {
-              this.viewCtrl.dismiss(hasSucceded);
-            });
-          break;
-        case 'edit':
-          let c = this.operationFactory.create(this.operationType);
-
-
-          // this.alert = this.alertBuilder();
-          this.alert = this.alertBuilder.createIncidenceAlert(this.isRepeatable());
-          this.alert.addButton({
-            text: 'Ok',
-            handler: (occurrence: any) => {
-
-              let navTransition = this.alert.dismiss();
-
-              c.executeOperation(occurrence, this.expenseForm.value, this.expense)
-                .subscribe((operationHasSucceded: boolean) => navTransition.then(() => this.nav.pop()));
-
-              return false;
-            },
-          });
-          this.alert.present();
-          break;
-        case 'delete':
-          this.alert = this.alertBuilder.createIncidenceAlert(this.isRepeatable());
-          this.alert.addButton({
-            text: 'Ok',
-            handler: (occurrence: any) => {
-              let navTransition = this.alert.dismiss();
-
-              this.dbService.delete(occurrence, this.expense)
-                .subscribe((isDeleted: any) => {
-                  console.log(isDeleted);
-                  navTransition.then(() => {
-                    this.nav.pop();
-                  });
-                },
-              );
-              return false;
-            },
-          });
-          this.alert.present();
-          break;
-        default:
-          break;
-      }
+      this.operationFactory
+        .create(this.operationType)
+        .executeOperation(this.expenseForm.value, this.expense)
+        .subscribe((has: any) => {
+          this.viewCtrl.dismiss();
+        });
     }
   }
 
