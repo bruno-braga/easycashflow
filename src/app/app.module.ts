@@ -16,7 +16,10 @@ import { ShowInstalmentMonth } from '../helpers/pipes/show-instalment-month.pipe
 import { OperationFactory } from '../helpers/factories/operation.factory';
 import { IncidenceController } from '../helpers/incidenceController/incidence.controller';
 import { AlertBuilder } from '../helpers/incidenceController/alert.builder';
-import { StrategyService } from '../helpers/strategies/strategy.service';
+
+import { EditStrategy } from '../helpers/strategies/edit.strategy';
+import { InsertStrategy } from '../helpers/strategies/insert.strategy';
+import { DeleteStrategy } from '../helpers/strategies/delete.strategy';
 
 @NgModule({
     declarations: [
@@ -46,7 +49,9 @@ import { StrategyService } from '../helpers/strategies/strategy.service';
       OperationFactory,
       IncidenceController,
       AlertBuilder,
-      StrategyService,
+      EditStrategy,
+      InsertStrategy,
+      DeleteStrategy,
     ],
 })
 

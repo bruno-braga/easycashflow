@@ -1,17 +1,24 @@
 import { Injectable } from '@angular/core';
-import { AlertController } from 'ionic-angular';
-import { StrategyService } from '../strategies/strategy.service';
+import { EditStrategy } from '../strategies/edit.strategy';
+import { InsertStrategy } from '../strategies/insert.strategy';
+import { DeleteStrategy } from '../strategies/delete.strategy';
 
 @Injectable()
 export class OperationFactory {
-  constructor(private alertCtrl: AlertController, private strategyService: StrategyService) {}
+  constructor(
+    private insertStrategy: InsertStrategy,
+    private editStrategy: EditStrategy,
+    private deleteStrategy: DeleteStrategy
+  ) {}
 
   public create(operation: string) {
     switch(operation) {
       case 'add':
-        return this.strategyService.getInsert();
+        return this.insertStrategy;
       case 'edit':
-        return this.strategyService.getEdit();
+        return this.editStrategy;
+      case 'delete':
+        return this.deleteStrategy; 
     }
   }
 }
