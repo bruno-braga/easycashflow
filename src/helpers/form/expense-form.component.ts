@@ -39,6 +39,7 @@ export class ExpenseFormComponent implements OnInit {
   private operationFactory: OperationFactory;
   private alertBuilder: AlertBuilder;
   private app: App;
+  private expenseFormService: any;
 
   constructor(private injector: Injector) {
     this.dbService = this.injector.get(DbService);
@@ -49,10 +50,11 @@ export class ExpenseFormComponent implements OnInit {
     this.operationFactory = this.injector.get(OperationFactory);
     this.alertBuilder = this.injector.get(AlertBuilder);
     this.app = this.injector.get(App);
+    this.expenseFormService = this.injector.get(ExpenseForm);
   }
 
   ngOnInit() {
-    this.expenseForm = ExpenseForm.create();
+    this.expenseForm = this.expenseFormService.create();
 
     if (this.expense !== null) {
       this.displayEditAndDeleteButtons = true;
