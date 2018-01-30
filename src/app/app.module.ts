@@ -6,6 +6,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home.page';
 import { ExpenseFormComponent } from '../helpers/form/expense-form.component';
+import { ExpenseForm } from '../helpers/form/expense-form';
+
 import { ExpenseModal } from '../pages/home/modal/expense.modal';
 
 import { DbModule } from '../database/db.module';
@@ -17,9 +19,11 @@ import { OperationFactory } from '../helpers/factories/operation.factory';
 import { IncidenceController } from '../helpers/incidenceController/incidence.controller';
 import { AlertBuilder } from '../helpers/incidenceController/alert.builder';
 
-import { EditStrategy } from '../helpers/strategies/edit.strategy';
-import { InsertStrategy } from '../helpers/strategies/insert.strategy';
-import { DeleteStrategy } from '../helpers/strategies/delete.strategy';
+import {
+  InsertStrategy,
+  EditStrategy,
+  DeleteStrategy
+} from '../helpers/strategies';
 
 @NgModule({
     declarations: [
@@ -52,6 +56,7 @@ import { DeleteStrategy } from '../helpers/strategies/delete.strategy';
       EditStrategy,
       InsertStrategy,
       DeleteStrategy,
+      ExpenseForm,
     ],
 })
 
