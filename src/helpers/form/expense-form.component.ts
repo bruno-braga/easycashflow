@@ -30,28 +30,15 @@ export class ExpenseFormComponent implements OnInit {
   public isForever: boolean;
   public displayEditAndDeleteButtons: boolean;
 
-  public alertCtrl: AlertController;
-  private dbService: DbService;
-  private viewCtrl: ViewController;
-  private zone: NgZone;
-  private nav: NavController;
-  private alert: any;
-  private operationFactory: OperationFactory;
-  private alertBuilder: AlertBuilder;
-  private app: App;
-  private expenseFormService: any;
-
-  constructor(private injector: Injector) {
-    this.dbService = this.injector.get(DbService);
-    this.viewCtrl = this.injector.get(ViewController);
-    this.zone = this.injector.get(NgZone);
-    this.alertCtrl = this.injector.get(AlertController);
-    this.nav = this.injector.get(NavController);
-    this.operationFactory = this.injector.get(OperationFactory);
-    this.alertBuilder = this.injector.get(AlertBuilder);
-    this.app = this.injector.get(App);
-    this.expenseFormService = this.injector.get(ExpenseForm);
-  }
+  constructor(
+    private dbService: DbService,
+    private viewCtrl: ViewController,
+    private zone: NgZone,
+    private alertCtrl: AlertController,
+    private nav: NavController,
+    private operationFactory: OperationFactory,
+    private alertBuilder: AlertBuilder,
+    private expenseFormService: ExpenseForm) {}
 
   ngOnInit() {
     this.expenseForm = this.expenseFormService.create();
