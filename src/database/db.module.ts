@@ -1,6 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DbService } from './db.service';
+import { DbSingleton } from './db.singleton';
 
 @NgModule({
   imports: [CommonModule],
@@ -14,6 +15,7 @@ export class DbModule {
       ngModule: DbModule,
       providers: [
         DbService,
+        DbSingleton,
       ],
     };
   }
