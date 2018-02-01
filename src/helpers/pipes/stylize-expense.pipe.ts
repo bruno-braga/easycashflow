@@ -9,6 +9,6 @@ export class StylizeAmountOfExpense implements PipeTransform {
       if (amount > 0) {
         return `+ $${amount}`;
       }
-      return `- $${amount.replace('-', '')}`;
+      return `- $${amount * -1}`;
   }
 }
