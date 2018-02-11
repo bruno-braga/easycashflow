@@ -19,11 +19,7 @@ import { OperationFactory } from '../helpers/factories/operation.factory';
 import { IncidenceController } from '../helpers/incidenceController/incidence.controller';
 import { AlertBuilder } from '../helpers/incidenceController/alert.builder';
 
-import {
-  InsertStrategy,
-  EditStrategy,
-  DeleteStrategy
-} from '../helpers/strategies';
+import { DbOperationStrategyModule  } from '../helpers/strategies/db.operation.strategy.module';
 
 @NgModule({
     declarations: [
@@ -40,6 +36,7 @@ import {
       IonicModule.forRoot(MyApp),
       DbModule.forRoot(),
       DateModule.forRoot(),
+      DbOperationStrategyModule.forRoot(),
     ],
     bootstrap: [IonicApp],
     entryComponents: [
@@ -53,9 +50,6 @@ import {
       OperationFactory,
       IncidenceController,
       AlertBuilder,
-      EditStrategy,
-      InsertStrategy,
-      DeleteStrategy,
       ExpenseForm,
     ],
 })
