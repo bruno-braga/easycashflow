@@ -8,8 +8,7 @@ export class OperationFactory {
   constructor(
     private insertStrategy: InsertStrategy,
     private editStrategy: EditStrategy,
-    private deleteStrategy: DeleteStrategy
-  ) {}
+    private deleteStrategy: DeleteStrategy) {}
 
   public create(operation: string) {
     switch(operation) {

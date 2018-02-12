@@ -97,7 +97,7 @@ export class HomePage implements OnInit {
     this.zone.run(() => {
       this.dbService.getAll()
         .subscribe(
-        ({ docs: expenses }: any) => {
+        (expenses: any) => {
           // create an array to separate the expenses by instalmnetId
           // {id: [], id2: []}
           let arr: any = {};
