@@ -56,7 +56,7 @@ export class DbService {
   };
 
   private findWrapper(query: any): Observable<any> {
-    Observable.fromPromise(
+    return Observable.fromPromise(
       new Promise((resolve: any, reject: any) => {
         this.db.find(query, (err: any, expenses: any) => {
           if (err)
@@ -115,11 +115,13 @@ export class DbService {
 
   public update(type: string, updatedExpense: any, oldExpense: any) {
     if (oldExpense.repeat !== updatedExpense.repeat) {
-      return this.deleteWrapper({ _id: oldExpense._id })
+      return Observable.create((observer: any) => {
+        this.deleteWrapper({ _id: oldExpense._id })
           .subscribe(() => {
             delete updatedExpense['_id'];
             observer.next(this.insert(updatedExpense));
-          });
+          })
+        });
     }
 
     switch (type) {
