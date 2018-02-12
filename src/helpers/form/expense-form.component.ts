@@ -8,7 +8,7 @@ import { App, ViewController, AlertController, NavController } from 'ionic-angul
 import { ExpenseForm } from './expense-form';
 
 import { OperationFactory } from '../factories/operation.factory';
-import { ExpenseIncidenceAlert } from '../incidenceController/alert.builder';
+import { ExpenseIncidenceAlert } from '../incidenceController/expense.incidence.alert';
 
 @Component({
   selector: 'ib-expense-form',

@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 
 import { DbService } from '../../database/db.service';
-import { ExpenseIncidenceAlert } from '../incidenceController/alert.builder';
+import { ExpenseIncidenceAlert } from '../incidenceController/expense.incidence.alert';
 import { OperationStrategy } from '../strategies/operation.interface';
 
 @Injectable()
