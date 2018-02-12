@@ -8,7 +8,7 @@ import { App, ViewController, AlertController, NavController } from 'ionic-angul
 import { ExpenseForm } from './expense-form';
 
 import { OperationFactory } from '../factories/operation.factory';
-import { AlertBuilder } from '../incidenceController/alert.builder';
+import { ExpenseIncidenceAlert } from '../incidenceController/alert.builder';
 
 @Component({
   selector: 'ib-expense-form',
@@ -37,7 +37,7 @@ export class ExpenseFormComponent implements OnInit {
     private alertCtrl: AlertController,
     private nav: NavController,
     private operationFactory: OperationFactory,
-    private alertBuilder: AlertBuilder,
+    private alertBuilder: ExpenseIncidenceAlert,
     private expenseFormService: ExpenseForm) {}
 
   ngOnInit() {
