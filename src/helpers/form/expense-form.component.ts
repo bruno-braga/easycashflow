@@ -60,7 +60,7 @@ export class ExpenseFormComponent implements OnInit {
 
   public verifyLimit() {
     if (this.repeat.value < 0) {
-      this.repeat.setValue(0);
+      this.repeat.setValue(1);
     }
   }
 
@@ -84,6 +84,10 @@ export class ExpenseFormComponent implements OnInit {
 
   public submit(): void {
     if (this.expenseForm.valid) {
+      if (this.isForever) {
+        this.expenseForm.value.repeat = Expense.MAX_EXPENSE_REPETITION;
+      }
+
       this.operationFactory
         .create(this.operationType)
         .executeOperation(this.expenseForm.value, this.expense)

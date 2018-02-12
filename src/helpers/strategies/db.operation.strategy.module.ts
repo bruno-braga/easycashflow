@@ -1,7 +1,11 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DbService } from './db.service';
-import { DbSingleton } from './db.singleton';
+
+import {
+  InsertStrategy,
+  EditStrategy,
+  DeleteStrategy
+} from './';
 
 @NgModule({
   imports: [CommonModule],
@@ -9,13 +13,14 @@ import { DbSingleton } from './db.singleton';
   exports: [],
 })
 
-export class DbModule {
+export class DbOperationStrategyModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: DbModule,
+      ngModule: DbOperationStrategyModule,
       providers: [
-        DbService,
-        DbSingleton,
+        InsertStrategy,
+        EditStrategy,
+        DeleteStrategy,
       ],
     };
   }

@@ -19,8 +19,6 @@ export class DeleteStrategy implements OperationStrategy {
     alert.addButton({
       text: 'ok',
       handler: (incidence: string) => {
-        console.log(incidence);
-
         this.dbService
           .delete(incidence, oldExpense)
           .subscribe(() => {

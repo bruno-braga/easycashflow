@@ -4,274 +4,149 @@ import { Observable } from 'rxjs';
 import { DateService } from '../date/date.service';
 import { Expense } from './models/Expense';
 
-import PouchDB from 'pouchdb';
-import PouchDBFind from 'pouchdb-find';
-import R from 'ramda';
-
-declare var window: any;
+import { DbSingleton } from './db.singleton';
 
 @Injectable()
 export class DbService {
   private db: any;
-  private id: any;
 
-  constructor(private dateService: DateService) {
-    this.db = new PouchDB('ionic2wallet');
-    PouchDB.plugin(PouchDBFind);
+  constructor(
+    private dateService: DateService,
+    private dbSingleton: DbSingleton) {
+    this.db = this.dbSingleton.getInstance();
   }
 
   public getAll() {
     return Observable.fromPromise(
-      this.db.createIndex({
-        index: {
-          fields: ['instalmentDate'],
-        },
+      new Promise((resolve: any, reject: any) => {
+        this.db.find({}).sort({ instalmentDate: 1 }).exec((err: any, docs: any) => {
+          if (err)
+            reject(err);
+
+          resolve(docs);
+        })
       })
-      .then((result: any) => {
-        console.log('result ', result);
-        return this.db.find({
-            selector: {},
-            sort: ['instalmentDate'],
-          });
-      })
-      .catch((err: any) => {
-        console.error('error ', err);
-      }),
     );
   }
+
   public insert(expense: any): Observable<any> {
     expense.repeat = parseInt(expense.repeat, 10);
-    if (expense.repeat === 0) {
-      expense.repeat = 1;
+    expense.amount = parseInt(expense.amount, 10);
+
+    let expenses: any;
+    switch(expense.repeat) {
+      case 1:
+        expenses = Expense.toObject(expense);
+      break;
+      default:
+        expenses = Expense.createInstalments(Expense.toObject(expense));
+      break;
     }
-
-    if (expense.forever) {
-      expense.repeat = Expense.MAX_EXPENSE_REPETITION;
-    }
-
-    if (expense.repeat === 1) {
-      let obj = Expense.toObject(expense);
-
-      return Observable.fromPromise(
-        this.db.post(obj),
-      );
-    }
-
-    let instalments = Expense.createInstalments(Expense.toObject(expense));
 
     return Observable.fromPromise(
-      this.db.bulkDocs(instalments),
+      new Promise((resolve: any, reject: any) => {
+        this.db.insert(expenses, (err: any, expenses: any) => {
+          if (err)
+            reject(err);
+
+          resolve(expenses);
+        })
+      })
+    );
+  };
+
+  private findWrapper(query: any): Observable<any> {
+    return Observable.fromPromise(
+      new Promise((resolve: any, reject: any) => {
+        this.db.find(query, (err: any, expenses: any) => {
+          if (err)
+            reject(err);
+
+          resolve(expenses);
+        })
+      })
+    );
+  }
+
+  private deleteWrapper(query: any, multi: boolean = false): Observable<any> {
+    return Observable.fromPromise(
+      new Promise((resolve: any, reject: any) => {
+        this.db.remove(query, { multi }, (err: any, expensesRemoved: any) => {
+          if (err)
+            reject(err);
+
+          resolve(expensesRemoved);
+        })
+      })
+    );
+  }
+
+  private updateWrapper(query: any, update: any, options: any = {}): Observable<any> {
+    return Observable.fromPromise(
+      new Promise((resolve: any, reject: any) => {
+        this.db.update(query, update, options, (err: any, expensesUpdated: any) => {
+          if (err)
+            reject(err);
+
+          resolve(expensesUpdated);
+        })
+      })
     );
   }
 
   public delete(type: string, expense: any): Observable<any> {
     switch (type) {
       case 'all':
-        return this.deleteAll(expense);
+        return this.deleteWrapper({ instalmentId: expense.instalmentId }, true);
       case 'current':
-        return this.deleteOne(expense);
+        return this.deleteWrapper({ _id: expense._id });
       case 'foward':
-         return this.deleteFoward(expense);
-      default:
-        return Observable.create(
-          (observer: any) => {
-            observer.error();
-            observer.complete();
-          });
+        return this.deleteWrapper(
+            {
+              instalmentId: expense.instalmentId,
+              instalmentDate: {
+                $gte: expense.instalmentDate
+              }
+            },
+            true
+          );
     }
   }
 
   public update(type: string, updatedExpense: any, oldExpense: any) {
     if (oldExpense.repeat !== updatedExpense.repeat) {
-      this.db.remove(oldExpense);
-      delete updatedExpense['_id'];
-      delete updatedExpense['_rev'];
-      return this.insert(updatedExpense);
+      return Observable.create((observer: any) => {
+        this.deleteWrapper({ _id: oldExpense._id })
+          .subscribe(() => {
+            delete updatedExpense['_id'];
+            observer.next(this.insert(updatedExpense));
+          })
+        });
     }
 
     switch (type) {
       case 'all':
-        return this.updateAll(updatedExpense);
+        return this.updateWrapper(
+            { instalmentId: oldExpense.instalmentId },
+            { $set: { amount: updatedExpense.amount, title: updatedExpense.title } },
+            { multi: true }
+          );
       case 'current':
-        return this.updateOne(updatedExpense);
+        return this.updateWrapper(
+            { _id: oldExpense._id },
+            updatedExpense
+          );
       case 'foward':
-        return this.updateFoward(updatedExpense);
-      default:
-        console.log();
-        break;
+        return this.updateWrapper(
+            {
+              instalmentId: oldExpense.instalmentId,
+              instalmentDate: {
+                $gte: oldExpense.instalmentDate
+              }
+            },
+            { $set: { amount: updatedExpense.amount, title: updatedExpense.title } },
+            { multi: true }
+          );
     }
-  }
-
-  public findCurrentMonthExpenses(): Observable<any> {
-    let start: any = this.dateService.getFirstDateOfMonth().toDate();
-    let end: any = this.dateService.getLastDateOfMonth().toDate();
-    return this.findByRange(start, end);
-  }
-
-  public findByInstalmentId(id: string): Observable<any> {
-    return Observable.fromPromise(
-      this.db.find(
-          {
-            selector: {
-              instalmentId: id,
-            },
-          },
-        ),
-      );
-  }
-
-  private updateOne(updatedExpense: any): Observable<any> {
-    return Observable.create((observer: any) => {
-      Observable.fromPromise(this.db.bulkDocs([updatedExpense]))
-        .subscribe(
-          (result: any) => {
-            observer.next(this.wasOperationSuccessful([result]));
-            observer.complete();
-          },
-        );
-    });
-  }
-
-  private updateAll(updatedExpense: any): Observable<any> {
-    return Observable.create((observer: any) => {
-      this.findByInstalmentId(updatedExpense.instalmentId)
-        .subscribe(
-          (result: any) => {
-            let updatedExpenses = result.docs.map((oldExpense: any, index: number) => {
-              for (let key in oldExpense) {
-                if (key === '_id' || key === '_rev' || key === 'instalmentDate') {
-                  continue;
-                }
-                oldExpense[key] = updatedExpense[key];
-                oldExpense['sortFactor'] = index;
-              }
-              return oldExpense;
-            });
-
-            Observable.fromPromise(this.db.bulkDocs(updatedExpenses))
-              .subscribe(
-                (results: any) => {
-                  observer.next(this.wasOperationSuccessful(results));
-                  observer.complete();
-                },
-              );
-          },
-        );
-    });
-  }
-
-  private updateFoward(selectedExpense: any): Observable<any> {
-    return Observable.create((observer: any) => {
-      this.findByInstalmentId(selectedExpense.instalmentId)
-      .subscribe(
-        (expenses: any) => {
-          let expensesToBeUpdated = expenses.docs
-            .filter((expense: any) => expense.instalmentDate >= selectedExpense.instalmentDate)
-            .map((expense: any) => {
-              for (let key in expense) {
-                if (key === '_id' || key === '_rev' || key === 'instalmentDate') {
-                  continue;
-                }
-                expense[key] = selectedExpense[key];
-              }
-
-              return expense;
-          });
-
-          Observable.fromPromise(this.db.bulkDocs(expensesToBeUpdated))
-            .subscribe(
-              (results: any) => {
-                observer.next(this.wasOperationSuccessful(results));
-                observer.complete();
-              },
-            );
-          },
-      );
-    });
-  }
-
-  private deleteOne(selectedExpense: any): Observable<any> {
-    return Observable.create((observer: any) => {
-      Observable.fromPromise(this.db.remove(selectedExpense))
-        .subscribe(
-        (results: any) => {
-          observer.next(this.wasOperationSuccessful([results]));
-        },
-      );
-    });
-  }
-
-  private deleteAll(selectedExpense: any): Observable<any> {
-    return Observable.create((observer: any) => {
-      this.findByInstalmentId(selectedExpense.instalmentId)
-        .subscribe(
-          (expenses: any) => {
-              let deleteArray = expenses.docs.map((expense: any) => {
-                expense['_deleted'] = true;
-                return expense;
-              });
-
-              Observable.fromPromise(this.db.bulkDocs(deleteArray))
-                .subscribe(
-                  (operationResult: any) => {
-                    observer.next(this.wasOperationSuccessful(operationResult));
-                    observer.complete();
-                  },
-                );
-          },
-        );
-    });
-  }
-
-  private deleteFoward(selectedExpense: any): Observable<any> {
-    return Observable.create((observer: any) => {
-      this.findByInstalmentId(selectedExpense.instalmentId)
-        .subscribe(
-          (expenses: any) => {
-            let deleteArray = expenses.docs
-                .filter((expense: any) => expense.instalmentDate >= selectedExpense.instalmentDate)
-                .map((expense: any) => {
-                  expense['_deleted'] = true;
-                  return expense;
-                });
-
-            Observable.fromPromise(this.db.bulkDocs(deleteArray))
-              .subscribe(
-                (operationResult: any) => {
-                  observer.next(this.wasOperationSuccessful(operationResult));
-                  observer.complete();
-                },
-              );
-          },
-        );
-    });
-  }
-
-  private findByRange(start: any, end: any): Observable<any> {
-    return Observable.fromPromise(
-      this.db.find(
-          {
-            selector: {
-              $and: [
-                {instalmentDate: {$gte: start}},
-                {instalmentDate: {$lte: end}},
-              ],
-            },
-          },
-        ),
-      );
-  }
-
-  private wasOperationSuccessful(deletedExpenses: any[]): boolean {
-    let success: boolean;
-    deletedExpenses.forEach((deletedExpense: any) => {
-      if (deletedExpense.ok) {
-        success = true;
-      } else {
-        success = false;
-      }
-    });
-
-    return success;
   }
 }

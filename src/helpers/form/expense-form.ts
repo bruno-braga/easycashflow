@@ -25,8 +25,6 @@ export class ExpenseForm {
     let isDateInstance: boolean = true;
     let currentDate = this.dateService.getMoment(isDateInstance);
 
-    console.log(this.formBuilder);
-    
     return this.formBuilder.group({
         title: ['', Validators.required],
         amount: ['', Validators.compose([
@@ -35,9 +33,8 @@ export class ExpenseForm {
           ]),
         ],
         composed: [false],
-        monyBag: [false],
         forever: [false],
-        repeat: [0, Validators.compose([
+        repeat: [1, Validators.compose([
           Validators.required,
           NumberValidator.isValidNumber,
         ])],
