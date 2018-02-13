@@ -3,7 +3,7 @@ import { ReflectiveInjector, Injectable, EventEmitter, NgZone } from '@angular/c
 import { DateService } from '../../date/date.service';
 import { DbService } from '../../database/db.service';
 import { Expense } from '../../database/models/Expense';
-import { ExpenseIncidenceAlert } from '../incidenceController/alert.builder';
+import { ExpenseIncidenceAlert } from '../incidenceController/expense.incidence.alert';
 
 @Injectable()
 export class EditStrategy implements OperationStrategy {
