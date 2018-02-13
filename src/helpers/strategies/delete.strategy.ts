@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 
 import { DbService } from '../../database/db.service';
-import { AlertBuilder } from '../incidenceController/alert.builder';
+import { ExpenseIncidenceAlert } from '../incidenceController/expense.incidence.alert';
 import { OperationStrategy } from '../strategies/operation.interface';
 
 @Injectable()
@@ -10,11 +10,11 @@ export class DeleteStrategy implements OperationStrategy {
 
   constructor(
     private dbService: DbService, 
-    private alertBuilder: AlertBuilder) {}
+    private alertBuilder: ExpenseIncidenceAlert) {}
 
   public executeOperation(expenseFormValues: any, oldExpense: any) {
     let isRepeatable = oldExpense.repeat > 1;
-    let alert  = this.alertBuilder.createIncidenceAlert(isRepeatable);
+    let alert  = this.alertBuilder.create(isRepeatable);
 
     alert.addButton({
       text: 'ok',

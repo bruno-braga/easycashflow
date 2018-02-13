@@ -17,7 +17,7 @@ import { StylizeAmountOfExpense } from '../helpers/pipes/stylize-expense.pipe';
 import { ShowInstalmentMonth } from '../helpers/pipes/show-instalment-month.pipe';
 import { OperationFactory } from '../helpers/factories/operation.factory';
 import { IncidenceController } from '../helpers/incidenceController/incidence.controller';
-import { AlertBuilder } from '../helpers/incidenceController/alert.builder';
+import { ExpenseIncidenceAlert } from '../helpers/incidenceController/expense.incidence.alert';
 
 import { DbOperationStrategyModule  } from '../helpers/strategies/db.operation.strategy.module';
 
@@ -49,7 +49,7 @@ import { DbOperationStrategyModule  } from '../helpers/strategies/db.operation.s
       SplashScreen,
       OperationFactory,
       IncidenceController,
-      AlertBuilder,
+      ExpenseIncidenceAlert,
       ExpenseForm,
     ],
 })

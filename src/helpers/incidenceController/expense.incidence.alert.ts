@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import { AlertController } from 'ionic-angular';
 
 @Injectable()
-export class AlertBuilder {
+export class ExpenseIncidenceAlert {
 
-  private incidenceAlert: any;
+  private alert: any;
 
   constructor(private alertCtrl: AlertController) {}
 
-  public createIncidenceAlert(isRepeatable: boolean) {
-    this.incidenceAlert = this.alertCtrl.create(); 
+  public create(isRepeatable: boolean) {
+    this.alert = this.alertCtrl.create(); 
 
-    this.incidenceAlert.setTitle('Choose an option');
-    this.incidenceAlert.addInput({
+    this.alert.setTitle('Choose an option');
+    this.alert.addInput({
       type: 'radio',
       checked: true,
       label: 'This',
@@ -20,20 +20,20 @@ export class AlertBuilder {
     });
 
     if (isRepeatable) {
-      this.incidenceAlert.addInput({
+      this.alert.addInput({
         type: 'radio',
         label: 'All',
         value: 'all',
       });
 
-      this.incidenceAlert.addInput({
+      this.alert.addInput({
         type: 'radio',
         label: 'Foward',
         value: 'foward',
       });
     }
 
-    this.incidenceAlert.addButton('Cancel');
-    return this.incidenceAlert;
+    this.alert.addButton('Cancel');
+    return this.alert;
   }
 }
