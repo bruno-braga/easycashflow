@@ -53,10 +53,10 @@ export class DbService {
         })
       })
     );
-  }
+  };
 
-  private findWrapper(query: any) {
-    Observable.fromPromise(
+  private findWrapper(query: any): Observable<any> {
+    return Observable.fromPromise(
       new Promise((resolve: any, reject: any) => {
         this.db.find(query, (err: any, expenses: any) => {
           if (err)
@@ -68,7 +68,7 @@ export class DbService {
     );
   }
 
-  private deleteWrapper(query: any, multi: boolean = false) {
+  private deleteWrapper(query: any, multi: boolean = false): Observable<any> {
     return Observable.fromPromise(
       new Promise((resolve: any, reject: any) => {
         this.db.remove(query, { multi }, (err: any, expensesRemoved: any) => {
@@ -81,7 +81,7 @@ export class DbService {
     );
   }
 
-  private updateWrapper(query: any, update: any, options: any = {}) {
+  private updateWrapper(query: any, update: any, options: any = {}): Observable<any> {
     return Observable.fromPromise(
       new Promise((resolve: any, reject: any) => {
         this.db.update(query, update, options, (err: any, expensesUpdated: any) => {
@@ -121,7 +121,7 @@ export class DbService {
             delete updatedExpense['_id'];
             observer.next(this.insert(updatedExpense));
           })
-      });
+        });
     }
 
     switch (type) {

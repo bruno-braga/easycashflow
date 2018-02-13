@@ -3,14 +3,14 @@ import { ReflectiveInjector, Injectable, EventEmitter, NgZone } from '@angular/c
 import { DateService } from '../../date/date.service';
 import { DbService } from '../../database/db.service';
 import { Expense } from '../../database/models/Expense';
-import { AlertBuilder } from '../incidenceController/alert.builder';
+import { ExpenseIncidenceAlert } from '../incidenceController/alert.builder';
 
 @Injectable()
 export class EditStrategy implements OperationStrategy {
   public hasSuccededEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(
-    private alertBuilder: AlertBuilder,
+    private alertBuilder: ExpenseIncidenceAlert,
     private dbService: DbService) {}
 
 
@@ -22,7 +22,7 @@ export class EditStrategy implements OperationStrategy {
       oldExpense[key] = expenseFormValues[key];
     }
     
-    let alert  = this.alertBuilder.createIncidenceAlert(isRepeatable);
+    let alert  = this.alertBuilder.create(isRepeatable);
     alert.addButton({
       text: 'ok',
       handler: (incidence: string) => {
