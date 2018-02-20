@@ -46,6 +46,19 @@ export class ExpenseFormComponent implements OnInit {
     if (this.expense !== null) {
       this.displayEditAndDeleteButtons = true;
       this.isComposed = this.expense.composed;
+
+      if (this.expense.composed) {
+        this.expenseForm.controls['composed'].disable();
+      }
+
+      if (this.expense.forever || this.expense.composed) {
+        this.expenseForm.controls['forever'].disable();
+      }
+
+      if (this.expense.repeat > 1 || this.expense.composed) {
+        this.expenseForm.controls['repeat'].disable();
+      }
+
       this.populateForm();
     } else {
       this.displayEditAndDeleteButtons = false;
