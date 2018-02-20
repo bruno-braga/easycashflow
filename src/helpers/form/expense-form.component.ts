@@ -20,6 +20,8 @@ export class ExpenseFormComponent implements OnInit {
 
   public operationType: string;
   public repeat: AbstractControl;
+  public title: AbstractControl;
+  public amount: AbstractControl;
   public isComposed: boolean = false;
   public expenseForm: FormGroup;
   public isForever: boolean;
@@ -61,6 +63,8 @@ export class ExpenseFormComponent implements OnInit {
     }
 
     this.repeat = this.expenseForm.controls['repeat'];
+    this.title = this.expenseForm.controls['title'];
+    this.amount = this.expenseForm.controls['amount'];
   }
 
   public verifyLimit() {
