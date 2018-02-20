@@ -1,9 +1,8 @@
 import { Component, Input, OnInit, Injector, NgZone } from '@angular/core';
-import { AbstractControl, FormGroup, Validators, FormControl } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 
 import { DbService } from '../../database/db.service';
 import { Expense } from '../../database/models/Expense';
-import { NumberValidator } from '../validator/number.validator';
 import { App, ViewController, AlertController, NavController } from 'ionic-angular';
 import { ExpenseForm } from './expense-form';
 
@@ -17,14 +16,12 @@ import { ExpenseIncidenceAlert } from '../incidenceController/expense.incidence.
 
 export class ExpenseFormComponent implements OnInit {
   @Input() public expense: Expense;
-  @Input() public callToAction: string;
   @Input() public currentDate: any;
 
   public operationType: string;
+  public repeat: AbstractControl;
   public title: AbstractControl;
   public amount: AbstractControl;
-  public repeat: AbstractControl;
-  public editType: AbstractControl;
   public isComposed: boolean = false;
   public expenseForm: FormGroup;
   public isForever: boolean;
@@ -65,10 +62,9 @@ export class ExpenseFormComponent implements OnInit {
       this.expenseForm.controls['instalmentDate'].setValue(this.currentDate.toDate());
     }
 
+    this.repeat = this.expenseForm.controls['repeat'];
     this.title = this.expenseForm.controls['title'];
     this.amount = this.expenseForm.controls['amount'];
-    this.repeat = this.expenseForm.controls['repeat'];
-    this.editType = this.expenseForm.controls['editType'];
   }
 
   public verifyLimit() {
