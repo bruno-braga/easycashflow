@@ -31,7 +31,7 @@ export class DbService {
 
   public insert(expense: any): Observable<any> {
     expense.repeat = parseInt(expense.repeat, 10);
-    expense.amount = parseInt(expense.amount, 10);
+    expense.amount = parseFloat(expense.amount);
 
     let expenses: any;
     switch(expense.repeat) {
