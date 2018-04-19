@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "es5",
         "module": "es2015",
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
@@ -10,7 +10,7 @@
         "declaration": false,
         "sourceMap": true,
         "skipLibCheck": true,
-        "noUnusedParameters": true,
+        "noUnusedParameters": false,
         "lib": [
             "dom",
             "es2015"
