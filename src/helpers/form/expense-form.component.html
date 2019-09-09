@@ -14,13 +14,13 @@
         <ion-label style="margin-bottom: 0; padding-left: 16px">Value</ion-label>
 
         <ion-item>
-          <button [color]="positiveButton.color" (click)="toggleColor(true)" ion-button item-start>
+          <a [color]="positiveButton.color" (click)="toggleColor(true)" ion-button item-start>
             <ion-icon name="add"></ion-icon>
-          </button>
+          </a>
 
-          <button [color]="negativeButton.color" (click)="toggleColor(false)" ion-button item-start>
+          <a [color]="negativeButton.color" (click)="toggleColor(false)" ion-button item-start>
             <ion-icon name="remove"></ion-icon>
-          </button>
+          </a>
 
           <ion-input formControlName="amount" type="number" step="any"  (ionChange)="verifyAmount($event)"></ion-input>
         </ion-item>
