@@ -26,6 +26,18 @@ export class ExpenseFormComponent implements OnInit {
   public expenseForm: FormGroup;
   public isForever: boolean;
   public displayEditAndDeleteButtons: boolean;
+  public meter: any = {
+    color: '',
+    icon: ''
+  };
+
+  public negativeButton: any = {
+    color: 'light'
+  }
+
+  public positiveButton: any = {
+    color: 'secondary'
+  }
 
   constructor(
     private dbService: DbService,
@@ -65,6 +77,44 @@ export class ExpenseFormComponent implements OnInit {
     this.repeat = this.expenseForm.controls['repeat'];
     this.title = this.expenseForm.controls['title'];
     this.amount = this.expenseForm.controls['amount'];
+  }
+
+  public isAmountPositive() {
+    if (this.amount.value > 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public toggleColor(isPositive: boolean) {
+    if (isPositive) {
+      this.positiveButton.color = 'secondary';
+      this.negativeButton.color = 'light';
+
+      if (!this.isAmountPositive()) {
+        this.amount.setValue(this.amount.value * -1);
+      }
+
+      return
+    }
+
+    if (this.isAmountPositive()) {
+      this.amount.setValue(this.amount.value * -1);
+    }
+
+    this.positiveButton.color = 'light';
+    this.negativeButton.color = 'danger';
+  }
+
+  public verifyAmount(event: any): any {
+    if (this.amount.value > 0) {
+      this.toggleColor(true)
+
+      return
+    }
+
+    this.toggleColor(false)
   }
 
   public verifyLimit() {
