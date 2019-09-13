@@ -146,6 +146,7 @@
     "ramda": "^0.24.1",
     "rxjs": "5.4.0",
     "sw-toolbox": "3.4.0",
+    "uid-safe": "^2.1.5",
     "zone.js": "0.8.12"
   },
   "devDependencies": {
