@@ -28,28 +28,24 @@
     </ion-row>
 
     <ion-row>
-      <ion-col col-12>
-        <ion-item>
-          <ion-label>Repeating</ion-label>
-          <ion-checkbox formControlName="composed" (ionChange)="toggleComposedProperties($event.checked)"></ion-checkbox>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row [hidden]="!isComposed">
-      <ion-col col-6>
+      <ion-list radio-group col-12 formControlName="forever">
         <ion-item>
           <ion-label>Forever</ion-label>
-          <ion-checkbox (ionChange)="toggleForever($event.checked)" formControlName="forever"></ion-checkbox>
-        </ion-item>
-      </ion-col>
 
-      <ion-col col-6>
+          <ion-radio (ionSelect)="setExpenseType($event)" value="true"></ion-radio>
+        </ion-item>
+
         <ion-item>
           <ion-label>times</ion-label>
-          <ion-input formControlName="repeat" min="1" max="72" type="number" (keyup)="verifyLimit(repeat)"></ion-input>
+
+          <ion-radio (ionSelect)="setExpenseType($event)" value="false"></ion-radio>
         </ion-item>
-      </ion-col>
+
+        <ion-item>
+          <ion-input (ionChange)="changed" [disabled]="isForever" formControlName="repeat" min="1" max="72" type="number" (keyup)="verifyLimit(repeat)"></ion-input>
+        </ion-item>
+      </ion-list>
+
     </ion-row>
 
     <ion-row>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Injector, NgZone } from '@angular/core';
+import { Component, Input, OnInit, Injector, NgZone, EventEmitter } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
 import { DbService } from '../../database/db.service';
@@ -17,6 +17,8 @@ import { ExpenseIncidenceAlert } from '../incidenceController/expense.incidence.
 export class ExpenseFormComponent implements OnInit {
   @Input() public expense: Expense;
   @Input() public currentDate: any;
+
+  public expenseTypeEmitter: EventEmitter<any> = new EventEmitter();
 
   public operationType: string;
   public repeat: AbstractControl;
@@ -39,6 +41,7 @@ export class ExpenseFormComponent implements OnInit {
     color: 'secondary'
   }
 
+
   constructor(
     private dbService: DbService,
     private viewCtrl: ViewController,
@@ -47,7 +50,11 @@ export class ExpenseFormComponent implements OnInit {
     private nav: NavController,
     private operationFactory: OperationFactory,
     private alertBuilder: ExpenseIncidenceAlert,
-    private expenseFormService: ExpenseForm) {}
+    private expenseFormService: ExpenseForm) {
+
+      this.expenseTypeEmitter
+        .subscribe((checked: boolean) => this.setIsForever(checked));
+    }
 
   ngOnInit() {
     this.expenseForm = this.expenseFormService.create();
@@ -77,6 +84,7 @@ export class ExpenseFormComponent implements OnInit {
     this.repeat = this.expenseForm.controls['repeat'];
     this.title = this.expenseForm.controls['title'];
     this.amount = this.expenseForm.controls['amount'];
+
   }
 
   public isAmountPositive() {
@@ -123,8 +131,16 @@ export class ExpenseFormComponent implements OnInit {
     }
   }
 
-  public toggleForever(checked: boolean): void {
+  public setExpenseType(checked: boolean): void {
+    this.expenseTypeEmitter.emit(checked)
+  }
+
+  private setIsForever(checked: boolean) : void {
     this.isForever = checked;
+  }
+
+  public changed() {
+    console.log('uuuu');
   }
 
   public isRepeatable() {
