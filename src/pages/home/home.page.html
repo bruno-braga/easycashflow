@@ -34,9 +34,17 @@
 					<ion-label padding-left="8px 0">
 						{{expense.title}}
 
-						<ng-template [ngIf]="expense.repeat > 1">
+						<ng-template [ngIf]="expense.repeat > 1 && !expense.forever">
 							<ion-icon name="repeat"></ion-icon>
 							{{expense | showInstalmentMonth:expenseRange}}
+						</ng-template>
+
+						<ng-template [ngIf]="expense.forever">
+							<ion-icon name="repeat"></ion-icon>
+
+							{{expense | showInstalmentMonth:expenseRange}}
+
+							<ion-icon name="infinite"></ion-icon>
 						</ng-template>
 					</ion-label>
 
