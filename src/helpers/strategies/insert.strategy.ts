@@ -12,14 +12,14 @@ export class InsertStrategy implements OperationStrategy {
 
   public executeOperation(expenseFormValues: any, oldExpense: any) {
     let expense = new Expense(
-            expenseFormValues['title'],
-            expenseFormValues['amount'],
-            expenseFormValues['instalmentDate'],
-            expenseFormValues['composed'],
-            expenseFormValues['monyBag'],
-            expenseFormValues['forever'],
-            expenseFormValues['repeat'],
-          );
+      expenseFormValues['title'],
+      expenseFormValues['amount'],
+      expenseFormValues['instalmentDate'],
+      expenseFormValues['forever'],
+      expenseFormValues['monyBag'],
+      expenseFormValues['forever'],
+      expenseFormValues['repeat'],
+    );
 
     this.dbService.insert(expense)
       .subscribe((has: any) => {
