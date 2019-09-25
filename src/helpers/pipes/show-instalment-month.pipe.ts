@@ -19,6 +19,10 @@ export class ShowInstalmentMonth implements PipeTransform {
       let findByInstalmentDate = R.findIndex(R.propEq('instalmentDate', expense.instalmentDate));
       let instalmentIndex = findByInstalmentDate(currentInstalment);
 
+      if (expense.forever) {
+        return `${instalmentIndex + 1}/`;
+      }
+
       return `${instalmentIndex + 1}/${currentInstalment.length}`;
     }
 }
