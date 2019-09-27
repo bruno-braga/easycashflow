@@ -45,7 +45,30 @@
           <ion-input (ionChange)="changed" [disabled]="isForever" formControlName="repeat" min="1" max="72" type="number" (keyup)="verifyLimit(repeat)"></ion-input>
         </ion-item>
       </ion-list>
+    </ion-row>
 
+    <ion-row *ngIf="displayEditAndDeleteButtons">
+      <ion-list radio-group col-12 formControlName="fowardOrAll">
+        <ion-item>
+          <ion-label>This expense</ion-label>
+
+          <ion-radio value="current"></ion-radio>
+        </ion-item>
+
+        <ng-template [ngIf]="doesRepeatManyTimes()">
+          <ion-item>
+            <ion-label>From this expense until the last</ion-label>
+
+            <ion-radio value="foward"></ion-radio>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>All expenses</ion-label>
+
+            <ion-radio value="all"></ion-radio>
+          </ion-item>
+        </ng-template>
+      </ion-list>
     </ion-row>
 
     <ion-row>

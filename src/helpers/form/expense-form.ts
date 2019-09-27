@@ -34,6 +34,7 @@ export class ExpenseForm {
         ],
         composed: [false],
         forever: [false],
+        fowardOrAll: [''],
         repeat: [1, Validators.compose([
           Validators.required,
           NumberValidator.isValidNumber,

@@ -21,22 +21,12 @@ export class EditStrategy implements OperationStrategy {
     for (let key in expenseFormValues) {
       oldExpense[key] = expenseFormValues[key];
     }
-    
-    let alert  = this.alertBuilder.create(isRepeatable);
-    alert.addButton({
-      text: 'ok',
-      handler: (incidence: string) => {
-        console.log(incidence);
 
-        this.dbService
-          .update(incidence, oldExpense, oldExpenseCopy)
-          .subscribe(() => {
-            this.hasSuccededEmitter.emit(true);
-          });
-      }
-    });
-
-    alert.present(); 
+    this.dbService
+      .update(expenseFormValues['fowardOrAll'], oldExpense, oldExpenseCopy)
+      .subscribe(() => {
+        this.hasSuccededEmitter.emit(true);
+      });
 
     return this.hasSuccededEmitter;
   }

@@ -95,6 +95,7 @@ export class DbService {
   }
 
   public delete(type: string, expense: any): Observable<any> {
+    console.log(type)
     switch (type) {
       case 'all':
         return this.deleteWrapper({ instalmentId: expense.instalmentId }, true);

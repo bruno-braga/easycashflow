@@ -3,11 +3,10 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 
 import { DbService } from '../../database/db.service';
 import { Expense } from '../../database/models/Expense';
-import { App, ViewController, AlertController, NavController } from 'ionic-angular';
+import { App, ViewController, NavController } from 'ionic-angular';
 import { ExpenseForm } from './expense-form';
 
 import { OperationFactory } from '../factories/operation.factory';
-import { ExpenseIncidenceAlert } from '../incidenceController/expense.incidence.alert';
 
 @Component({
   selector: 'ib-expense-form',
@@ -24,6 +23,7 @@ export class ExpenseFormComponent implements OnInit {
   public repeat: AbstractControl;
   public title: AbstractControl;
   public amount: AbstractControl;
+  public fowardOrAll: AbstractControl;
   public isComposed: boolean = false;
   public expenseForm: FormGroup;
   public isForever: boolean;
@@ -46,10 +46,8 @@ export class ExpenseFormComponent implements OnInit {
     private dbService: DbService,
     private viewCtrl: ViewController,
     private zone: NgZone,
-    private alertCtrl: AlertController,
     private nav: NavController,
     private operationFactory: OperationFactory,
-    private alertBuilder: ExpenseIncidenceAlert,
     private expenseFormService: ExpenseForm) {
 
       this.expenseTypeEmitter
@@ -67,13 +65,16 @@ export class ExpenseFormComponent implements OnInit {
         this.expenseForm.controls['composed'].disable();
       }
 
-      if (this.expense.forever || this.expense.composed) {
+      if (this.expense.forever) {
         this.expenseForm.controls['forever'].disable();
+        this.fowardOrAll = this.expenseForm.controls['fowardOrAll'];
       }
 
-      if (this.expense.repeat > 1 || this.expense.composed) {
+      if (this.expense.repeat > 1) {
         this.expenseForm.controls['repeat'].disable();
+        this.fowardOrAll = this.expenseForm.controls['fowardOrAll'];
       }
+
 
       this.populateForm();
     } else {
@@ -84,7 +85,6 @@ export class ExpenseFormComponent implements OnInit {
     this.repeat = this.expenseForm.controls['repeat'];
     this.title = this.expenseForm.controls['title'];
     this.amount = this.expenseForm.controls['amount'];
-
   }
 
   public isAmountPositive() {
@@ -139,18 +139,16 @@ export class ExpenseFormComponent implements OnInit {
     this.isForever = checked;
   }
 
-  public changed() {
-    console.log('uuuu');
-  }
-
-  public isRepeatable() {
-    if (this.expense != null) {
-      return this.expense.repeat > 1;
-    }
-  }
-
   public isExpenseComposed() {
     return this.isComposed;
+  }
+
+  public doesRepeatManyTimes() {
+    if (this.expense.repeat > 1) {
+      return true;
+    }
+
+    return false;
   }
 
   public setOperationType(type: string) {
