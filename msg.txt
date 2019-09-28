@@ -1,0 +1,7 @@
+Remove alert to edit or delete by option(current, foward and all)
+
+Every time you needed to delete or edit an expense an alert showing 3
+options popped up asking you to choose 'this', 'foward' or 'all'. If you
+choose this only the current expense would be delete, foward from the current 
+to the last one and all would operate the action in all expenses. This feature
+removes the alert pop up and put the options onto the form.

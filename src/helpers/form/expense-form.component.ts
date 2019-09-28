@@ -87,6 +87,11 @@ export class ExpenseFormComponent implements OnInit {
     this.amount = this.expenseForm.controls['amount'];
   }
 
+  public verifyError(e) {
+    console.log(e.value)
+    console.log(e.ngControl.name)
+  }
+
   public isAmountPositive() {
     if (this.amount.value > 0) {
       return true;

@@ -4,7 +4,7 @@
       <ion-col col-12>
         <ion-label style="margin-bottom: 0; padding-left: 16px">Name</ion-label>
         <ion-item>
-          <ion-input formControlName="title" type="text"></ion-input>
+          <ion-input data-id="title" (ionBlur)="verifyError($event)" formControlName="title" type="text"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
