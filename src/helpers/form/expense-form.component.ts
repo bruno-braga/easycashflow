@@ -161,7 +161,11 @@ export class ExpenseFormComponent implements OnInit {
         this.expenseForm.value.repeat = Expense.MAX_EXPENSE_REPETITION;
       }
 
-      this.operationFactory
+    if (this.expenseForm.value.repeat == 1) {
+      this.expenseForm.value.fowardOrAll = 'current'
+    }
+
+    this.operationFactory
         .create(this.operationType)
         .executeOperation(this.expenseForm.value, this.expense)
         .subscribe((has: any) => {
