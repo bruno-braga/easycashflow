@@ -1,0 +1,16 @@
+<ion-slides pager>
+  <ion-slide *ngFor="let slide of slides">
+    <h2 class="slide-title">{{ slide.title }}</h2>
+
+    <p>{{ slide.text }}</p>
+  </ion-slide>
+
+  <ion-slide>
+    <h2 class="slide-title">Ready????</h2>
+
+    <button (click)="updateHasVisited()" ion-button large clear icon-end color="primary">
+      Continue
+      <ion-icon name="arrow-forward"></ion-icon>
+    </button>
+  </ion-slide>
+</ion-slides>

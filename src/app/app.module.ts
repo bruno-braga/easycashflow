@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-
+import { SplashScreen } from '@ionic-native/splash-screen'; 
 import { MyApp } from './app.component';
+
 import { HomePage } from '../pages/home/home.page';
+import { OnboardingPageModule } from '../pages/onboarding/onboarding.module';
+
 import { ExpenseFormComponent } from '../helpers/form/expense-form.component';
 import { ExpenseForm } from '../helpers/form/expense-form';
 
@@ -33,6 +35,7 @@ import { DbOperationStrategyModule  } from '../helpers/strategies/db.operation.s
     ],
     imports: [
       BrowserModule,
+      OnboardingPageModule,
       IonicModule.forRoot(MyApp),
       DbModule.forRoot(),
       DateModule.forRoot(),
