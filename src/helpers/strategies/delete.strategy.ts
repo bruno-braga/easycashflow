@@ -10,9 +10,6 @@ export class DeleteStrategy implements OperationStrategy {
   constructor(private dbService: DbService) {}
 
   public executeOperation(expenseFormValues: any, oldExpense: any) {
-    console.log(expenseFormValues['fowardOrAll']);
-
-    console.log('vaosefuse')
     this.dbService.delete(expenseFormValues['fowardOrAll'], oldExpense)
       .subscribe(() => (this.hasSuccededEmitter.emit(true)));
 
