@@ -130,7 +130,7 @@
     "@types/nedb": "^1.8.5",
     "@types/ramda": "^0.24.18",
     "add": "^2.0.6",
-    "cordova-android": "^6.3.0",
+    "cordova-android": "^11.0.0",
     "cordova-plugin-console": "^1.1.0",
     "cordova-plugin-device": "^1.1.6",
     "cordova-plugin-splashscreen": "^4.0.3",
